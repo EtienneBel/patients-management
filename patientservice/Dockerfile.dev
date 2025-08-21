@@ -1,0 +1,59 @@
+# Development Dockerfile for Spring Boot application
+FROM eclipse-temurin:21-jdk-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install development tools
+RUN apk add --no-cache \
+    curl \
+    git \
+    vim \
+    htop \
+    procps \
+    busybox-extras
+
+# 1. Copy only Maven wrapper, .mvn, and pom.xml first (for dependency caching)
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+
+# Make mvnw executable
+RUN chmod +x mvnw
+
+# 2. Download dependencies (this layer is cached unless pom.xml changes)
+RUN ./mvnw dependency:go-offline -B
+
+# 3. Now copy the rest of the source code
+COPY . .
+
+# Create app user for development
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S appuser -G appgroup && \
+    chown -R appuser:appgroup /app && \
+    mkdir -p /home/appuser/.m2 && \
+    chown -R appuser:appgroup /home/appuser/.m2 && \
+    mkdir -p /app/uploads/profile-pictures && \
+    chown -R appuser:appgroup /app/uploads
+
+# Switch to app user
+USER appuser
+
+# Expose ports for application and debugging
+EXPOSE 8080 5005
+
+# Set JVM options for development
+ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+
+# Set Spring Boot devtools options for hot reload
+ENV SPRING_DEVTOOLS_RESTART_ENABLED=true
+ENV SPRING_DEVTOOLS_RESTART_POLL_INTERVAL=2s
+ENV SPRING_DEVTOOLS_RESTART_QUIET_PERIOD=1s
+ENV MAVEN_USER_HOME=/home/appuser/.m2
+
+# Health check for development
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Run the application in development mode with fast Maven build
+CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.fork=false", "-DskipTests", "-B", "-T", "2C", "-Dspring-boot.run.jvmArguments=-Xms256m -Xmx512m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"] 

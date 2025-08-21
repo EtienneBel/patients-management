@@ -1,0 +1,100 @@
+services:
+  # Backend Service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Debug port
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/patientservice
+      - SPRING_DATASOURCE_USERNAME=patientservice
+      - SPRING_DATASOURCE_PASSWORD=patientservice_password
+      - JAVA_OPTS=-Xms256m -Xmx512m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_RESTART_POLL_INTERVAL=2s
+      - SPRING_DEVTOOLS_RESTART_QUIET_PERIOD=1s
+    volumes:
+      - .:/app
+      - maven_cache:/home/appuser/.m2
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - patientservice-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Database Service
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=patientservice
+      - POSTGRES_USER=patientservice
+      - POSTGRES_PASSWORD=patientservice_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U patientservice -d patientservice"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - patientservice-network
+
+  # Database Admin Tool
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@patientservice.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
+    networks:
+      - patientservice-network
+    profiles:
+      - tools
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - patientservice-network
+    profiles:
+      - cache
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  maven_cache:
+    driver: local
+  pgadmin_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  patientservice-network:
+    driver: bridge
+    name: patientservice_dev_network
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16   

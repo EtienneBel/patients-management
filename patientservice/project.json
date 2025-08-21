@@ -1,0 +1,94 @@
+{
+  "name": "backend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/backend/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn clean compile",
+        "cwd": "apps/backend"
+      },
+      "outputs": [
+        "{projectRoot}/target"
+      ]
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn clean package -DskipTests",
+        "cwd": "apps/backend"
+      },
+      "outputs": [
+        "{projectRoot}/target"
+      ]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker compose -f ../../docker-compose.dev.yml up backend --build --attach backend",
+        "cwd": "."
+      },
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn test",
+        "cwd": "apps/backend"
+      },
+      "outputs": [
+        "{projectRoot}/target/surefire-reports"
+      ]
+    },
+    "test:coverage": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn test jacoco:report",
+        "cwd": "apps/backend"
+      },
+      "outputs": [
+        "{projectRoot}/target/site/jacoco"
+      ]
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn checkstyle:check",
+        "cwd": "apps/backend"
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn clean",
+        "cwd": "apps/backend"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker compose -f ../../docker-compose.dev.yml build backend",
+        "cwd": "."
+      },
+      "dependsOn": [
+        "package"
+      ]
+    },
+    "docker:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker compose -f ../../docker-compose.dev.yml up backend",
+        "cwd": "."
+      },
+      "cache": false,
+      "persistent": true
+    }
+  },
+  "tags": [
+    "type:app",
+    "scope:backend"
+  ]
+}
