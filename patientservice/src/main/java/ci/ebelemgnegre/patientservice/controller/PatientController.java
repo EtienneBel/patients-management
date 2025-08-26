@@ -1,4 +1,4 @@
-package ci.ebelemgnegre.controller;
+package ci.ebelemgnegre.patientservice.controller;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ci.ebelemgnegre.dto.PatientRequestDTO;
-import ci.ebelemgnegre.dto.PatientResponseDTO;
-import ci.ebelemgnegre.service.PatientService;
+import ci.ebelemgnegre.patientservice.dto.PatientRequestDTO;
+import ci.ebelemgnegre.patientservice.dto.PatientResponseDTO;
+import ci.ebelemgnegre.patientservice.service.PatientService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 

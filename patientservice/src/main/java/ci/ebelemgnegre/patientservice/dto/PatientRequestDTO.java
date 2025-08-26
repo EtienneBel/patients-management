@@ -1,4 +1,4 @@
-package ci.ebelemgnegre.dto;
+package ci.ebelemgnegre.patientservice.dto;
 
 import java.time.LocalDate;
 

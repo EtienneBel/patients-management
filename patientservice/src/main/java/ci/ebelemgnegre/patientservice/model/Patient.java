@@ -1,4 +1,4 @@
-package ci.ebelemgnegre.model;
+package ci.ebelemgnegre.patientservice.model;
 
 import java.time.LocalDate;
 import java.util.UUID;

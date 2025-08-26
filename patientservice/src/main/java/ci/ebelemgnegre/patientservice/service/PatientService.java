@@ -1,14 +1,14 @@
-package ci.ebelemgnegre.service;
+package ci.ebelemgnegre.patientservice.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ci.ebelemgnegre.dto.PatientRequestDTO;
-import ci.ebelemgnegre.dto.PatientResponseDTO;
-import ci.ebelemgnegre.mapper.PatientMapper;
-import ci.ebelemgnegre.model.Patient;
-import ci.ebelemgnegre.repository.PatientRepository;
+import ci.ebelemgnegre.patientservice.dto.PatientRequestDTO;
+import ci.ebelemgnegre.patientservice.dto.PatientResponseDTO;
+import ci.ebelemgnegre.patientservice.mapper.PatientMapper;
+import ci.ebelemgnegre.patientservice.model.Patient;
+import ci.ebelemgnegre.patientservice.repository.PatientRepository;
 
 @Service
 public class PatientService {

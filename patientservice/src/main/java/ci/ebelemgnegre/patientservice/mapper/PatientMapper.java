@@ -1,8 +1,8 @@
-package ci.ebelemgnegre.mapper;
+package ci.ebelemgnegre.patientservice.mapper;
 
-import ci.ebelemgnegre.dto.PatientRequestDTO;
-import ci.ebelemgnegre.dto.PatientResponseDTO;
-import ci.ebelemgnegre.model.Patient;
+import ci.ebelemgnegre.patientservice.dto.PatientRequestDTO;
+import ci.ebelemgnegre.patientservice.dto.PatientResponseDTO;
+import ci.ebelemgnegre.patientservice.model.Patient;
 
 public class PatientMapper {
 
