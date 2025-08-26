@@ -1,10 +1,13 @@
 package ci.ebelemgnegre.patientservice.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +38,13 @@ public class PatientController {
         PatientResponseDTO patient = patientService.createPatient(patientRequestDTO);
 
         return ResponseEntity.ok().body(patient);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable UUID id, @Valid @RequestBody PatientRequestDTO patientRequestDTO){
+        PatientResponseDTO updatedPatient = patientService.updatePatient(id, patientRequestDTO);
+
+        return ResponseEntity.ok().body(updatedPatient);
     }
     
 }
