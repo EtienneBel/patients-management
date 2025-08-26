@@ -10,4 +10,6 @@ import ci.ebelemgnegre.patientservice.model.Patient;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, UUID>{
     boolean existsByEmail(String email);
+    
+    boolean existsByEmailAndId(String email, UUID id);
 }
