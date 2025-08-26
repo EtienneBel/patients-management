@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import ci.ebelemgnegre.dto.PatientRequestDTO;
 import ci.ebelemgnegre.dto.PatientResponseDTO;
 import ci.ebelemgnegre.mapper.PatientMapper;
 import ci.ebelemgnegre.model.Patient;
@@ -23,5 +24,11 @@ public class PatientService {
 
         return patientResponseDTOs;
     
+    }
+
+    public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO) {
+        Patient savedPatient = patientRepository.save(PatientMapper.toModel(patientRequestDTO));
+
+        return PatientMapper.toDto(savedPatient);
     }
 }

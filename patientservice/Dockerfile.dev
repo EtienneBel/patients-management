@@ -40,10 +40,10 @@ RUN addgroup -g 1001 -S appgroup && \
 USER appuser
 
 # Expose ports for application and debugging
-EXPOSE 4000 5005
+EXPOSE 4000 5006
 
 # Set JVM options for development
-ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006"
 
 # Set Spring Boot devtools options for hot reload
 ENV SPRING_DEVTOOLS_RESTART_ENABLED=true
@@ -56,4 +56,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:4000/actuator/health || exit 1
 
 # Run the application in development mode with fast Maven build
-CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.fork=false", "-DskipTests", "-B", "-T", "2C", "-Dspring-boot.run.jvmArguments=-Xms256m -Xmx512m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"] 
+CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.fork=false", "-DskipTests", "-B", "-T", "2C", "-Dspring-boot.run.jvmArguments=-Xms256m -Xmx512m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006"] 

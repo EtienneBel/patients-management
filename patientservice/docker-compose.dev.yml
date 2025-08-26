@@ -6,12 +6,12 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "4000:4000"
-      - "5005:5005"  # Debug port
+      - "5006:5006"  # Debug port
     environment:
       - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
       - SPRING_DATASOURCE_USERNAME=admin_viewer
       - SPRING_DATASOURCE_PASSWORD=password
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - JAVA_OPTS=-Xms256m -Xmx512m -XX:+UseG1GC -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
     volumes:
       - .:/app
       - maven_cache:/home/appuser/.m2
