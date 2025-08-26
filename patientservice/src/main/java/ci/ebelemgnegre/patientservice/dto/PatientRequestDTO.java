@@ -18,7 +18,7 @@ public class PatientRequestDTO {
     @NotBlank(message = "Address is required")
     private String address;
 
-    @NotBlank(message = "Date of birth is required")
+    @NotNull(message = "Date of birth is required")
     private LocalDate dateOfBirth;
 
     @NotNull(message = "Registered date is required")
